@@ -1,11 +1,12 @@
 package com.example.login.user.service;
 
 
-import com.example.login.user.model.UserVO;
+import com.example.login.user.dto.UserDto;
+import com.example.login.user.model.User;
 
 public interface UserService {
 
-    void login(UserVO uservo) throws Exception;
+    User login(UserDto uservo) throws Exception;
 
-    void signup(UserVO uservo) throws Exception;
+    User signup(UserDto uservo) throws Exception;
 }
