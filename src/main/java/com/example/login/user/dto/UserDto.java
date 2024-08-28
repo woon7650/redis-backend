@@ -2,6 +2,7 @@ package com.example.login.user.dto;
 
 
 import com.example.login.user.model.User;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Getter
@@ -10,12 +11,16 @@ import lombok.*;
 @AllArgsConstructor
 public class UserDto {
 
+    @JsonProperty
     private String id;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @JsonProperty
     private String name;
 
+    @JsonProperty
     private String email;
 
 
