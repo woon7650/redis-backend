@@ -25,7 +25,7 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.18.18'
 
     //DB
-    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly 'org.postgresql:postgresql'
 
     //spring security
     implementation 'org.springframework.boot:spring-boot-starter-security'
