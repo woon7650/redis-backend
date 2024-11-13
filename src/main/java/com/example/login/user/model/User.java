@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "USER")
+@Table(name = "TB_USER")
 
 public class User implements Serializable {
 
