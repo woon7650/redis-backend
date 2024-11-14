@@ -21,27 +21,11 @@ public class UserServiceImpl implements UserService{
 
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Resource(name = "userRepository")
     private UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
-
-
-
-    @Override
-    public User login(UserDto userDto) throws Exception{
-        User user = userRepository.findById(userDto.getId()).orElseThrow(() ->  new CustomException(ErrorCode.USER_NOT_FOUND));
-
-        if(!passwordEncoder.matches(userDto.getPassword(), user.getPassword())){
-            throw new CustomException(ErrorCode.INVALID_PASSWORD);
-        }
-        return user;
-        //userRepository.login(userDto);
-    }
 
     @Override
     public User signup(UserDto userDto) throws Exception{

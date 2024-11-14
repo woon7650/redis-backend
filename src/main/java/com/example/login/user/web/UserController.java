@@ -18,12 +18,6 @@ public class UserController {
     @Resource(name = "userService")
     private UserService userService;
 
-    @PostMapping(value = "/user/login")
-    public ApiResponse<UserDto> login(@RequestBody UserDto userDto, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception{
-        UserDto user = UserDto.of(userService.login(userDto));
-        return ApiResponse.success(ResponseCode.SELECT_SUCCESS.getHttpStatusCode(), null, user);
-    }
-
     @PostMapping(value = "/user/signup")
     public ApiResponse<UserDto> signup(@RequestBody UserDto userDto) throws Exception{
         return ApiResponse.success(ResponseCode.INSERT_SUCCESS.getHttpStatusCode(), null, UserDto.of(userService.signup(userDto)));
