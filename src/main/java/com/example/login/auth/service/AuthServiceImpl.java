@@ -1,11 +1,94 @@
 package com.example.login.auth.service;
 
+import com.example.login.auth.model.RefreshToken;
+import com.example.login.auth.model.TokenDto;
+import com.example.login.auth.repository.RefreshTokenRepository;
+import com.example.login.common.enumType.ErrorCode;
+import com.example.login.common.exception.CustomException;
+import com.example.login.common.util.JwtUtil;
+import com.example.login.user.dto.UserDto;
+import com.example.login.user.model.User;
+import com.example.login.user.repository.UserRepository;
+import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
+import org.antlr.v4.runtime.Token;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service("authService")
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
 
-    //private final RedisTemplate<String,String> redisTemplate;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
+    @Override
+    public TokenDto login(UserDto userDto) throws Exception{
+
+        User user = userRepository.findById(userDto.getId()).orElseThrow(() ->  new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        if(!passwordEncoder.matches(userDto.getPassword(), user.getPassword())){
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        //access, refresh token 생성
+        final String accessToken = jwtUtil.generateAccessToken(UserDto.of(user));
+        final String refreshToken = jwtUtil.generateRefreshToken(UserDto.of(user));
+
+        //refresh token redis 저장
+        refreshTokenRepository.save(new RefreshToken(user.getId(), refreshToken));
+
+        //response 생성
+        TokenDto tokenDto = TokenDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .userDto(UserDto.of(user))
+                .build();
+
+        return tokenDto;
+        //userRepository.login(userDto);
+    }
+
+    @Override
+    public void logout(UserDto userDto) throws Exception{
+
+        if(refreshTokenRepository.findByRefreshToken(refreshToken).isEmpty()){
+            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN);
+        }
+
+        refreshTokenRepository.deleteByRefreshToken(refreshToken);
+        SecurityContextHolder.clearContext();
+
+    }
+
+    @Override
+    public TokenDto reissue(UserDto userDto, refreshToken) throws Exception{
+
+        //Refresh Token 유효성 확인
+
+
+
+        //access, refresh token 모두 재발급(RTR)
+        final String accessToken = jwtUtil.generateAccessToken(UserDto.of(user));
+        final String refreshToken = jwtUtil.generateRefreshToken(UserDto.of(user));
+
+        //refresh token redis 저장
+        refreshTokenRepository.save(new RefreshToken(user.getId(), refreshToken));
+
+        //response 생성
+        TokenDto tokenDto = TokenDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .userDto(UserDto.of(user))
+                .build();
+
+
+        return tokenDto;
+        //userRepository.login(userDto);
+    }
 
 }
