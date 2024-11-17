@@ -9,10 +9,7 @@ import com.example.login.common.util.JwtUtil;
 import com.example.login.user.dto.UserDto;
 import com.example.login.user.model.User;
 import com.example.login.user.repository.UserRepository;
-import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.Token;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,40 +51,37 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public void logout(UserDto userDto) throws Exception{
+    public void logout(UserDto UserDto) throws Exception{
 
-        if(refreshTokenRepository.findByRefreshToken(refreshToken).isEmpty()){
-            throw new UnauthorizedException(ErrorCode.INVALID_REFRESH_TOKEN);
+        if(refreshTokenRepository.findByRefreshToken(tokenDto.getRefreshToken()).isEmpty()){
+            //Refresh Token 유효성 검사
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
-        refreshTokenRepository.deleteByRefreshToken(refreshToken);
+        refreshTokenRepository.deleteByRefreshToken(tokenDto.getRefreshToken());
         SecurityContextHolder.clearContext();
 
     }
 
     @Override
-    public TokenDto reissue(UserDto userDto, refreshToken) throws Exception{
+    public TokenDto reissue(UserDto userDto, TokenDto tokenDto) throws Exception{
 
-        //Refresh Token 유효성 확인
-
-
-
-        //access, refresh token 모두 재발급(RTR)
-        final String accessToken = jwtUtil.generateAccessToken(UserDto.of(user));
-        final String refreshToken = jwtUtil.generateRefreshToken(UserDto.of(user));
+        //Refresh Token 유효성 관련 없이 access, refresh token 모두 재발급(RTR)
+        final String accessToken = jwtUtil.generateAccessToken(userDto);
+        final String refreshToken = jwtUtil.generateRefreshToken(userDto);
 
         //refresh token redis 저장
-        refreshTokenRepository.save(new RefreshToken(user.getId(), refreshToken));
+        refreshTokenRepository.save(new RefreshToken(userDto.getId(), refreshToken));
 
         //response 생성
-        TokenDto tokenDto = TokenDto.builder()
+        TokenDto responsenTokenDto = TokenDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .userDto(UserDto.of(user))
+                .userDto(userDto)
                 .build();
 
 
-        return tokenDto;
+        return responsenTokenDto;
         //userRepository.login(userDto);
     }
 
