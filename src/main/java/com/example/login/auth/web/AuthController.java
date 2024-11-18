@@ -10,6 +10,8 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,25 +21,27 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
+
     private final AuthService authService;
 
     @PostMapping(value = "/auth/login")
-    public ApiResponse<TokenDto> login(@RequestBody UserDto userDto, HttpServletRequest httpServletRequest) throws Exception{
-        TokenDto tokenDto = authService.login(userDto);
-        return ApiResponse.success(ResponseCode.SELECT_SUCCESS.getHttpStatusCode(), null, tokenDto);
+    public ApiResponse<UserDto> login(@RequestBody UserDto userDto, HttpServletResponse httpServletResponse) throws Exception{
+        UserDto responseUserDto = authService.login(userDto, httpServletResponse);
+        return ApiResponse.success(ResponseCode.SELECT_SUCCESS.getHttpStatusCode(), null, responseUserDto);
     }
 
 
     @PostMapping(value = "/auth/reissue")
-    public ApiResponse<TokenDto> reissue(@RequestBody TokenDto tokenDto, HttpServletRequest httpServletRequest) throws Exception{
-        TokenDto responseTokenDto = authService.reissue(tokenDto);
-        return ApiResponse.success(ResponseCode.INSERT_SUCCESS.getHttpStatusCode(), null, responseTokenDto);
+    public ApiResponse<UserDto> reissue(@RequestBody TokenDto tokenDto, HttpServletResponse httpServletResponse) throws Exception{
+        UserDto responseUserDto = authService.reissue(tokenDto, httpServletResponse);
+        return ApiResponse.success(ResponseCode.INSERT_SUCCESS.getHttpStatusCode(), null, responseUserDto);
     }
 
     @PostMapping(value = "/auth/logout")
     public ApiResponse<?> logout(@RequestBody TokenDto tokenDto, HttpServletRequest httpServletRequest) throws Exception{
         authService.logout(tokenDto);
-        return ApiResponse.success(ResponseCode.INSERT_SUCCESS.getHttpStatusCode(), null, userDto);
+        return ApiResponse.success(ResponseCode.INSERT_SUCCESS.getHttpStatusCode(), null, null);
     }
 
     /*

@@ -27,7 +27,14 @@ public enum ErrorCode {
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "M0", "허용되지 않은 메소드입니다."),
 
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S0", "서버에 오류가 발생하였습니다."),
+
+    // Auth
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "A1", "인증이 필요합니다."),
+    COUNTERFEIT(HttpStatus.UNAUTHORIZED, "A2", "위조 및 변조된 토큰입니다."),
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "A3", "만료된 토큰입니다."),
+
     ;
+
 
     private final HttpStatus httpStatus;
     private final String code;

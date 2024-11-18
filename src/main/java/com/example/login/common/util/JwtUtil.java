@@ -1,5 +1,8 @@
 package com.example.login.common.util;
 
+import com.example.login.common.enumType.ErrorCode;
+import com.example.login.common.exception.BusinessException;
+import com.example.login.common.exception.CustomException;
 import com.example.login.user.dto.UserDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -7,11 +10,14 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -129,7 +135,23 @@ public class JwtUtil {
         return claims.get("userId").toString();
     }
 
+    /**
+     * 'Cookie' 내에서 'Refresh Token'를 저장하는 메서드
+     *
+     * @param refreshToken : 토큰
+     * @return ResponseCookie : Cookie
+     */
+    public ResponseCookie setCookieWithRefreshToken(String refreshToken){
 
-
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+                .maxAge(refreshExpirationTime)
+                .path("/")
+                // secure(true) : https 환경에서만 쿠키가 발동합니다.
+                .secure(false)
+                .sameSite("None")
+                .httpOnly(true)
+                .build();
+        return cookie;
+    }
 
 }

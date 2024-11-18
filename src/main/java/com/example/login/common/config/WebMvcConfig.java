@@ -11,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -35,8 +36,6 @@ public class WebMvcConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-
-
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
@@ -46,7 +45,7 @@ public class WebMvcConfig {
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/login", "/auth/reissue").permitAll())
-                .addFilter(jwtFilter)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 //exception handler 추가
                 .cors((cors)-> cors.configurationSource(apiConfigurationSource())
                 );
