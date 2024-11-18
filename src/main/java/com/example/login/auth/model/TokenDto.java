@@ -14,6 +14,5 @@ public class TokenDto {
 
     String accessToken;
     String refreshToken;
-    UserDto userDto;
 
 }

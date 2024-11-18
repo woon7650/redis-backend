@@ -8,8 +8,9 @@ public interface AuthService {
 
     TokenDto login(UserDto userDto) throws Exception;
 
-    void logout(UserDto userDto) throws Exception;
+    void logout(TokenDto tokenDto) throws Exception;
 
-    TokenDto reissue(UserDto userDto) throws Exception;
+    TokenDto reissue(TokenDto tokenDto) throws Exception;
+
 
 }

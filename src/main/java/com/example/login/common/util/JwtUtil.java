@@ -7,6 +7,8 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.*;
@@ -84,7 +86,10 @@ public class JwtUtil {
      */
     public boolean validateToken(String jwtToken){
         try{
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwtToken);
+            Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(jwtToken);
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
@@ -124,34 +129,7 @@ public class JwtUtil {
         return claims.get("userId").toString();
     }
 
-    /**
-     * 'Claims' 내에서 토큰을 기반으로 사용자 정보를 반환하는 메서드
-     *
-     * @param token
-     * @param isAccessToken : AccessToken 인지 여부
-     * @return Claim 내의 사용자 정보를 반환합니다.
-     */
 
-    /*
-    public Authentication getAuthentication(String token) {
-
-        Claims claims = parseClaims(token);
-
-        if (claims.get("auth") == null) {
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
-        }
-
-        Collection<? extends GrantedAuthority> authorities
-                = Arrays.stream(claims.get("auth")
-                .toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        UserDetails interface를 구현한 User Class
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
-    }
-    */
 
 
 }
