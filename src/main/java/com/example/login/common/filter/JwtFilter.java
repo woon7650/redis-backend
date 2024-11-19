@@ -24,7 +24,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String accessToken = resolveToken(request);
+        String accessToken = jwtUtil.resolveToken(request);
         if(jwtUtil.validateToken(accessToken)){
             //인증에 성공하면 Authentication 객체를 SecurityContext에 저장
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(jwtUtil.getUserIdFromClaims(accessToken), null, null);
@@ -35,13 +35,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
     }
 
-    private String resolveToken(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
-        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
-            return token.substring(7);
-        }
-        return null;
-    }
 
 
 }

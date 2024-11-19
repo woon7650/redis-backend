@@ -33,14 +33,14 @@ public class AuthController {
 
 
     @PostMapping(value = "/auth/reissue")
-    public ApiResponse<UserDto> reissue(@RequestBody TokenDto tokenDto, HttpServletResponse httpServletResponse) throws Exception{
-        UserDto responseUserDto = authService.reissue(tokenDto, httpServletResponse);
+    public ApiResponse<UserDto> reissue(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception{
+        UserDto responseUserDto = authService.reissue(httpServletRequest, httpServletResponse);
         return ApiResponse.success(ResponseCode.INSERT_SUCCESS.getHttpStatusCode(), null, responseUserDto);
     }
 
     @PostMapping(value = "/auth/logout")
-    public ApiResponse<?> logout(@RequestBody TokenDto tokenDto, HttpServletRequest httpServletRequest) throws Exception{
-        authService.logout(tokenDto);
+    public ApiResponse<?> logout(HttpServletRequest httpServletRequest) throws Exception{
+        authService.logout(httpServletRequest);
         return ApiResponse.success(ResponseCode.INSERT_SUCCESS.getHttpStatusCode(), null, null);
     }
 

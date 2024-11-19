@@ -7,6 +7,8 @@ import com.example.login.user.dto.UserDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
 import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -152,6 +156,36 @@ public class JwtUtil {
                 .httpOnly(true)
                 .build();
         return cookie;
+    }
+
+    /**
+     * 'Request' 내에서 'Access Token'을 반환하는 메서드
+     *
+     * @param request : request
+     * @return token : 토큰
+     */
+    public String resolveToken(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (StringUtils.hasText(token) && token.startsWith("Bearer ")) {
+            return token.substring(7);
+        }
+        return null;
+    }
+
+    /**
+     * 'Cookie' 내에서 'Refresh Token'을 반환하는 메서드
+     *
+     * @param request : request
+     * @return token : 토큰
+     */
+    public String getRefreshTokenFromCookie(HttpServletRequest request){
+
+        String refreshToken = "";
+        Cookie rc[] = request.getCookies();
+        for (Cookie cookie : rc) {
+            refreshToken = cookie.getValue();
+        }
+        return refreshToken;
     }
 
 }

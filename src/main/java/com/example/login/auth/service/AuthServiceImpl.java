@@ -10,6 +10,7 @@ import com.example.login.user.dto.UserDto;
 import com.example.login.user.model.User;
 import com.example.login.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
@@ -45,15 +46,12 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     @Transactional
-    public UserDto reissue(TokenDto tokenDto, HttpServletResponse response) throws Exception{
+    public UserDto reissue(HttpServletRequest request, HttpServletResponse response) throws Exception{
 
-        String accessToken = tokenDto.getAccessToken();
-        String refreshtToken = tokenDto.getRefreshToken();
+        String accessToken = jwtUtil.resolveToken(request);
+        String refreshToken = jwtUtil.getRefreshTokenFromCookie(request);
 
-        //Refresh Token 유효성 검사
-        if(!jwtUtil.validateToken(refreshtToken)){
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
+
         /*
         Access Token에서 꺼낸 id로 redis에 있는 RefreshToken 검색
         RedisString 에 있는 RefreshToken과 Cookie에서 가져온 RefreshToken이 일치하는지 확인
@@ -61,6 +59,12 @@ public class AuthServiceImpl implements AuthService{
         String userId = jwtUtil.getUserIdFromClaims(accessToken);
         RefreshToken redisToken = refreshTokenRepository.findById(userId)
                 .orElseThrow(() ->  new CustomException(ErrorCode.EXPIRED_TOKEN));
+
+
+        //Refresh Token 유효성 검사
+        if(!jwtUtil.validateToken(redisToken.getRefreshToken())){
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
 
         if(!redisToken.equals(redisToken.getRefreshToken())){
             //로그아웃
@@ -80,14 +84,15 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public void logout(TokenDto tokenDto) throws Exception{
+    public void logout(HttpServletRequest request) throws Exception{
 
-        if(refreshTokenRepository.findByRefreshToken(tokenDto.getRefreshToken()).isEmpty()){
+        String accessToken = jwtUtil.resolveToken(request);
+        if(refreshTokenRepository.findByAccessToken(accessToken).isEmpty()){
             //Refresh Token 유효성 검사
             throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         }
 
-        refreshTokenRepository.deleteByRefreshToken(tokenDto.getRefreshToken());
+        refreshTokenRepository.deleteByAccessToken(accessToken);
         SecurityContextHolder.clearContext();
 
     }

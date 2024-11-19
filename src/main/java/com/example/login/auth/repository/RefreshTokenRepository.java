@@ -12,9 +12,8 @@ public interface RefreshTokenRepository extends CrudRepository<RefreshToken, Lon
 
     Optional<RefreshToken> findById(String id);
 
+    Optional<RefreshToken> deleteByAccessToken(String accessToken);
 
     Optional<RefreshToken> findByRefreshToken(String refreshToken);
-
-    Optional<RefreshToken> deleteByRefreshToken(String refreshToken);
 
 }
