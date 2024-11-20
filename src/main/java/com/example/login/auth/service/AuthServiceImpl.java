@@ -46,6 +46,16 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     @Transactional
+    public UserDto signup(UserDto userDto) throws Exception{
+        String encryptPassword = passwordEncoder.encode(userDto.getPassword());
+        userDto.setPassword(encryptPassword);
+        User user = userRepository.save(userDto.toEntity());
+        return UserDto.of(user);
+
+    }
+
+    @Override
+    @Transactional
     public UserDto reissue(HttpServletRequest request, HttpServletResponse response) throws Exception{
 
         String accessToken = jwtUtil.resolveToken(request);
@@ -66,7 +76,7 @@ public class AuthServiceImpl implements AuthService{
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
 
-        if(!redisToken.equals(redisToken.getRefreshToken())){
+        if(!refreshToken.equals(redisToken.getRefreshToken())){
             //로그아웃
             throw new CustomException(ErrorCode.COUNTERFEIT);
         }
@@ -105,7 +115,7 @@ public class AuthServiceImpl implements AuthService{
         final String refreshToken = jwtUtil.generateRefreshToken(userDto);
 
         //refresh token redis 저장
-        refreshTokenRepository.save(new RefreshToken(userDto.getId(), refreshToken));
+        refreshTokenRepository.save(new RefreshToken(userDto.getId(), accessToken, refreshToken));
 
 
         response.setHeader("Authorization", accessToken);

@@ -12,13 +12,15 @@ public class RefreshToken {
 
     @Id
     private String id;
+
     @Indexed
     private String accessToken;
 
     private String refreshToken;
 
-    public RefreshToken(String userId, String refreshToken){
+    public RefreshToken(String userId, String accessToken, String refreshToken){
         this.id = userId;
+        this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
 }

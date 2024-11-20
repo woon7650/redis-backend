@@ -28,10 +28,12 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public User signup(UserDto userDto) throws Exception{
-        String encryptPassword = passwordEncoder.encode(userDto.getPassword());
-        userDto.setPassword(encryptPassword);
-        return userRepository.save(userDto.toEntity());
+    public UserDto selectUserInfo(UserDto userDto) throws Exception{
+        User user = userRepository.findById("ery950")
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
+
+        return UserDto.of(user);
     }
+
 }

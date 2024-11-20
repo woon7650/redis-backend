@@ -44,7 +44,7 @@ public class WebMvcConfig {
                         .sessionCreationPolicy((SessionCreationPolicy.STATELESS)))
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/login", "/auth/reissue").permitAll())
+                        .requestMatchers("/auth/**").permitAll())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 //exception handler 추가
                 .cors((cors)-> cors.configurationSource(apiConfigurationSource())

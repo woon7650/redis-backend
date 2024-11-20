@@ -10,6 +10,8 @@ public interface AuthService {
 
     UserDto login(UserDto userDto, HttpServletResponse response) throws Exception;
 
+    UserDto signup(UserDto userDto) throws Exception;
+
     UserDto reissue(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
     void logout(HttpServletRequest request) throws Exception;

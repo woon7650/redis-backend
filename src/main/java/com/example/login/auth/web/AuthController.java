@@ -15,9 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -25,20 +27,26 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping(value = "/auth/login")
+    @PostMapping(value = "/login")
     public ApiResponse<UserDto> login(@RequestBody UserDto userDto, HttpServletResponse httpServletResponse) throws Exception{
         UserDto responseUserDto = authService.login(userDto, httpServletResponse);
         return ApiResponse.success(ResponseCode.SELECT_SUCCESS.getHttpStatusCode(), null, responseUserDto);
     }
 
 
-    @PostMapping(value = "/auth/reissue")
+    @PostMapping(value = "/signup")
+    public ApiResponse<UserDto> signup(@RequestBody UserDto userDto) throws Exception{
+        UserDto responseUserDto = authService.signup(userDto);
+        return ApiResponse.success(ResponseCode.INSERT_SUCCESS.getHttpStatusCode(), null, responseUserDto);
+    }
+
+    @PostMapping(value = "/reissue")
     public ApiResponse<UserDto> reissue(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception{
         UserDto responseUserDto = authService.reissue(httpServletRequest, httpServletResponse);
         return ApiResponse.success(ResponseCode.INSERT_SUCCESS.getHttpStatusCode(), null, responseUserDto);
     }
 
-    @PostMapping(value = "/auth/logout")
+    @PostMapping(value = "/logout")
     public ApiResponse<?> logout(HttpServletRequest httpServletRequest) throws Exception{
         authService.logout(httpServletRequest);
         return ApiResponse.success(ResponseCode.INSERT_SUCCESS.getHttpStatusCode(), null, null);
