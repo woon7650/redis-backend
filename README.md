@@ -35,4 +35,5 @@ Redis를 이용한 로그인 구현(인증) + 권한 추가(인가) + ElasticSea
     - refreshToken : Redis에서 해당 key-value 제거 + cookie에서 삭제
     
 
-2. 권한 추가(인가)
+2. 권한 추가(인가) 진행 중
+3. Full-Text-Search 진행 중
