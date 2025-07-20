@@ -1,7 +1,6 @@
 package com.example.login.common.config;
 
 import com.example.login.common.filter.JwtFilter;
-import com.example.login.oauth.service.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -27,7 +25,6 @@ public class WebMvcConfig {
 
 
     private final JwtFilter jwtFilter;
-    private final OAuth2UserService oAuth2UserService;
 
 
     @Bean
@@ -41,12 +38,6 @@ public class WebMvcConfig {
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
-                .oauth2Login(oauth2Login -> oauth2Login
-                        .defaultSuccessUrl("/oauth/google")
-                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint
-                                .userService( oAuth2UserService)
-                        )
-                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy((SessionCreationPolicy.STATELESS)))
