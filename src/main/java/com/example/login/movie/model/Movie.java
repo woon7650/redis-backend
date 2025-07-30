@@ -1,12 +1,17 @@
 package com.example.login.movie.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import jakarta.persistence.Table;
+import lombok.*;
 
+@Entity
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@Table(name = "TB_MOVIE")
 public class Movie {
 
     @Id

@@ -1,11 +1,14 @@
 package com.example.login.movie.dto;
 
+import com.example.login.movie.model.Movie;
+import com.example.login.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-@Builder
+@Setter
 @AllArgsConstructor
 public class MovieDto {
 
@@ -30,4 +33,20 @@ public class MovieDto {
     private String prdtYear;
     //개봉일
     private String openDt;
+
+
+    public Movie toEntity(){
+        return Movie.builder()
+                .movieCd(this.movieCd)
+                .movieNm(this.movieNm)
+                .moviceNmEn(this.moviceNmEn)
+                .repNationAlt(this.repNationAlt)
+                .repGenreAlt(this.repGenreAlt)
+                .directors(this.directors)
+                .companyCd(this.companyCd)
+                .companyNm(this.companyNm)
+                .prdtYear(this.prdtYear)
+                .openDt(this.openDt)
+                .build();
+    }
 }
