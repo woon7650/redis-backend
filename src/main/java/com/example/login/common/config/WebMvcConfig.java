@@ -26,15 +26,13 @@ public class WebMvcConfig {
 
     private final JwtFilter jwtFilter;
 
-
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
@@ -43,10 +41,10 @@ public class WebMvcConfig {
                         .sessionCreationPolicy((SessionCreationPolicy.STATELESS)))
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll())
+                        .anyRequest().permitAll())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 //exception handler 추가
-                .cors((cors)-> cors.configurationSource(apiConfigurationSource())
+                .cors((cors) -> cors.configurationSource(apiConfigurationSource())
                 );
         return http.build();
     }

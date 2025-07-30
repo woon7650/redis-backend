@@ -1,18 +1,14 @@
 package com.example.login.auth.web;
 
-import com.example.login.auth.model.TokenDto;
 import com.example.login.auth.service.AuthService;
 import com.example.login.common.enumType.ResponseCode;
 import com.example.login.common.response.ApiResponse;
-import com.example.login.common.util.RedisUtils;
 import com.example.login.user.dto.UserDto;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
