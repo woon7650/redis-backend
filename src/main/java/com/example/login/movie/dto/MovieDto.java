@@ -39,7 +39,7 @@ public class MovieDto {
         return Movie.builder()
                 .movieCd(this.movieCd)
                 .movieNm(this.movieNm)
-                .moviceNmEn(this.moviceNmEn)
+                .movieNmEn(this.moviceNmEn)
                 .repNationAlt(this.repNationAlt)
                 .repGenreAlt(this.repGenreAlt)
                 .directors(this.directors)

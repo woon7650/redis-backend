@@ -11,6 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@ToString
 @Table(name = "TB_MOVIE")
 public class Movie {
 
@@ -22,7 +23,7 @@ public class Movie {
     private String movieNm;
 
     @Column(name = "MOVIE_NM_EN")
-    private String moviceNmEn;
+    private String movieNmEn;
 
     @Column(name = "REP_NATION_ALT")
     private String repNationAlt;
